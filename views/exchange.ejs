@@ -258,43 +258,36 @@
                   expand_more
                 </span>
                 <select id="payments" name="payments" is="ms-dropdown" required>
-                  <option value="btc" data-image="./assets/img/crypto/bitcoin.png" data-description="Bitcoin">BTC/USDT
-                  </option>
-                  <option value="btc" data-image="./assets/img/crypto/binance.png" data-description="Binance">BNB/USDT
-                  </option>
-                  <option value="btc" data-image="./assets/img/crypto/digibyte.png" data-description="Digibyte">DGB/USDT
-                  </option>
-                  <option value="btc" data-image="./assets/img/crypto/etherium.png" data-description="Ethereum">ETH/USDT
-                  </option>
-                  <option value="btc" data-image="./assets/img/crypto/monero.png" data-description="Monero">MNC/USDT
+                  <option value="<%coinInfo.symbol%>" data-image="<%=coinInfo.image%>" data-description="Bitcoin"><%=coinInfo.symbol.toUpperCase() %>/USDT
                   </option>
                 </select>
               </div>
               <div class="d-flex flex-column rate-item">
                 <span class="large fw-bold">Price</span>
-                <span class="small primary fw-bold">21,264.95 </span>
+                <span class="small primary fw-bold"><%=coinInfo.current_price%> </span>
               </div>
               <div class="d-flex flex-column rate-item">
                 <span class="large fw-bold">24h Change</span>
-                <span class="small primary fw-bold">21,264.95 </span>
+                <% let className = coinInfo.price_change_24h > 0 ? 'primary' : 'secondary'  %>
+                <span class="small fw-bold <%=className%>"><%=coinInfo.price_change_24h.toFixed(2) %> </span>
               </div>
               <div class="d-flex flex-column rate-item">
                 <span class="large fw-bold">24h high</span>
-                <span class="small secondary fw-bold d-flex align-items-center gap-2">21,264.95 <span
-                    class="material-symbols-outlined fw-light secondary">
-                    insights
-                  </span></span>
-              </div>
-              <div class="d-flex flex-column rate-item">
-                <span class="large fw-bold">24h low</span>
-                <span class="small primary fw-bold d-flex align-items-center gap-2">21,264.95 <span
+                <span class="small primary fw-bold d-flex align-items-center gap-2"><%=coinInfo.high_24h%> <span
                     class="material-symbols-outlined fw-light primary">
                     insights
                   </span></span>
               </div>
               <div class="d-flex flex-column rate-item">
+                <span class="large fw-bold">24h low</span>
+                <span class="small secondary fw-bold d-flex align-items-center gap-2"><%=coinInfo.low_24h%> <span
+                    class="material-symbols-outlined fw-light secondary">
+                    insights
+                  </span></span>
+              </div>
+              <div class="d-flex flex-column rate-item">
                 <span class="large fw-bold">24h Volume</span>
-                <span class="small fw-bold">21,264.95 </span>
+                <span class="small fw-bold"><%=coinInfo.market_cap_change_24h%> </span>
               </div>
             </div>
           </div>
@@ -350,9 +343,86 @@
   <script src="assets/js/jquery.nice-select.js"></script>
   <script src="assets/js/dd.min.js"></script>
   <script src="assets/js/main.js"></script>
-  <script src="assets/js/exchange_chart.js"></script>
+  <!-- <script src="assets/js/exchange_chart.js"></script> -->
+
+  <script>
+
+    let seriesData = <%- JSON.stringify(coinInfo.ohlc) %>;
+
+    // Now seriesData is already an array/object and can be used directly
+    console.log(seriesData);
+
+    // add 5 hours and 30 minutes to each date
+
+    seriesData.map((item) => {
+      item.x = new Date(item.x + 5.5 * 3600 * 1000);
+    });    
+   
+
+var options = {
+    series: [{
+      data:seriesData
+    }],
+    chart: {
+      toolbar: {
+        show: false
+      },
+      type: 'candlestick',
+      height: '100%',
+    },
+    plotOptions: {
+      candlestick: {
+        colors: {
+          upward: '#3EBF81',
+          downward: '#FC774A'
+        }
+      }
+    },
+
+    xaxis: {
+      type: 'datetime',
+      labels: {
+        style: {
+          colors: '#D2D9E4'
+        }
+      },
+      tooltip: {
+        enabled: false
+      }
+    },
+    yaxis: {
+      tooltip: {
+        enabled: false,
+        // followCursor: true
+      },
+      labels: {
+        show: false,
+      }
+    },
+    grid: {
+      borderColor: '#242F40',
+      xaxis: {
+        lines: {
+          show: true
+        }
+      },
+      yaxis: {
+        lines: {
+          show: true
+        }
+      },
+    },
+    tooltip: {
+      enabled: true,
+      theme: false
+    },
+  };
+
+  var chart = new ApexCharts(document.querySelector("#exchangeChart"), options);
+  chart.render();
+
+  </script>
 </body>
 
 
-<!-- Mirrored from cryptdash.vercel.app/exchange.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Sep 2024 06:33:49 GMT -->
 </html>

@@ -80,3 +80,8 @@ if (inputs) {
     });
   }
 }
+
+function toBillions(amount) {
+  // Convert amount to billions by dividing by 1 billion (1,000,000,000)
+  return amount / 1e9;
+}
