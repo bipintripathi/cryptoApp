@@ -319,7 +319,7 @@
   border-radius: 12px;
 }
 .main-content .mainchart .chart-container {
-  height: 330px;
+  height: 70vh;
 }
 .main-content .donut-wrapper {
   display: flex;
